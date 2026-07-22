@@ -43,13 +43,21 @@ Machine tells to remove. Avoid these:
 - No em dashes. Use commas, colons, or parentheses.
 - Do not open sentences with "Moreover", "Furthermore", "Additionally", or "In
   addition" out of habit. Most of them can simply be cut.
-- Avoid the inflated vocabulary that models overuse: delve, leverage, seamless,
-  robust, intricate, pivotal, crucial, comprehensive, realm, tapestry,
-  underscore, showcase, testament, landscape, navigate, foster, myriad,
-  nuanced, meticulous. Use the plain word instead.
-- Avoid formula phrases: "plays a vital role in", "plays a key role in", "a wide
-  range of", "it is worth noting", "in today's world", "rich tapestry", "stands
-  as a testament to".
+- Avoid the inflated vocabulary that models overuse. Use the plain word
+  instead: delve, delve into, leverage, utilize, harness, streamline,
+  underscore, showcase, foster, navigate, facilitate, boast, align, surpass,
+  seamless, robust, intricate, pivotal, crucial, vital, comprehensive,
+  meticulous, nuanced, holistic, innovative, groundbreaking, transformative,
+  cutting-edge, remarkable, notable, myriad, plethora, realm, landscape,
+  tapestry, synergy, testament, underpinnings, moreover, furthermore,
+  additionally, notably, indeed. Prefer "use" over "utilize", "shows" over
+  "underscores", "because" over "owing to the fact that".
+- Avoid formula phrases: "it is important to note", "it is worth noting", "it
+  should be noted", "plays a vital role in", "plays a crucial role in shaping",
+  "a wide range of", "in today's fast-paced world", "in today's digital age",
+  "in the realm of", "rich tapestry", "stands as a testament to", "cannot be
+  overstated", "paving the way", "navigate the complexities", "aims to explore",
+  "when it comes to", "at the end of the day", "in conclusion".
 - Do not line up three parallel items just for rhythm (the "X, Y, and Z"
   tricolon) unless the content genuinely needs three.
 

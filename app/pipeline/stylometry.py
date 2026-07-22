@@ -67,23 +67,33 @@ _MOREOVER_FAMILY: tuple[str, ...] = (
     "moreover", "furthermore", "additionally", "in addition", "besides",
 )
 
-# Inflated vocabulary that language models reach for far more than human authors.
-# Counting it in the draft tells the writer which words to swap for plain ones.
-# This is an editing signal, a count of tells, not a detector score.
+# Inflated vocabulary that language models reach for far more than human authors,
+# compiled from GPTZero's AI-vocabulary list and the medRxiv/PubMed studies on
+# AI-associated words in academic writing. Counting it in the draft tells the
+# writer which words to swap for plain ones. This is an editing signal, a count
+# of tells, not a detector score, and it mirrors the rewrite prompt's ban list.
 _AI_DICTION: tuple[str, ...] = (
-    "delve", "leverage", "seamless", "seamlessly", "robust", "intricate",
-    "pivotal", "crucial", "comprehensive", "realm", "tapestry", "underscore",
-    "underscores", "showcase", "showcases", "testament", "landscape",
-    "navigate", "foster", "myriad", "nuanced", "meticulous", "meticulously",
-    "notably", "furthermore", "moreover",
+    "delve", "delves", "delving", "leverage", "leverages", "leveraging",
+    "utilize", "utilizes", "utilise", "harness", "harnesses", "streamline",
+    "underscore", "underscores", "underscoring", "showcase", "showcases",
+    "showcasing", "foster", "fosters", "navigate", "navigating", "facilitate",
+    "boast", "boasts", "align", "aligns", "surpass", "surpassing", "seamless",
+    "seamlessly", "robust", "intricate", "pivotal", "crucial", "comprehensive",
+    "meticulous", "meticulously", "nuanced", "holistic", "innovative",
+    "groundbreaking", "transformative", "remarkable", "myriad", "plethora",
+    "realm", "landscape", "tapestry", "synergy", "testament", "underpinnings",
+    "moreover", "furthermore", "additionally", "notably", "indeed",
 )
 
 # Hollow throat-clearing phrases that add words without adding content.
 _HOLLOW_PHRASES: tuple[str, ...] = (
     "it is important to note", "it is worth noting", "it is worth mentioning",
-    "plays a vital role", "plays a key role", "plays a crucial role",
-    "a wide range of", "rich tapestry", "in today's world",
-    "stands as a testament", "it should be noted",
+    "it should be noted", "plays a vital role", "plays a key role",
+    "plays a crucial role", "a wide range of", "rich tapestry",
+    "in today's world", "in today's fast-paced world", "in today's digital age",
+    "in the realm of", "stands as a testament", "cannot be overstated",
+    "paving the way", "navigate the complexities", "when it comes to",
+    "at the end of the day",
 )
 
 _BE_FORMS = r"(?:am|is|are|was|were|be|been|being)"
