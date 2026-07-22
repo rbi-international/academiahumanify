@@ -168,7 +168,12 @@ _PATTERNS: tuple[tuple[str, re.Pattern[str], _Predicate | None], ...] = (
         re.compile(
             r"\b\d+(?:\.\d+)?\s?"
             r"(?:%|°[CF]|[npµum]?g|[kmM]?g|[mM]?L|mL|kg|"
-            r"[npµm]?s|ms|Hz|[kMG]Hz|[kMG]?B|mm|cm|km|nm)\b"
+            r"[npµm]?s|ms|Hz|[kMG]Hz|[kMG]?B|mm|cm|km|nm)"
+            # Not \b here: a trailing word boundary never matches after '%'
+            # (both sides non-word), which used to leave a loose percent sign
+            # behind. A negative lookahead for an alphanumeric works for units
+            # that end in a symbol and units that end in a letter alike.
+            r"(?![A-Za-z0-9])"
         ),
         None,
     ),

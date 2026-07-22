@@ -90,9 +90,23 @@ def test_masks_urls() -> None:
 def test_masks_quantities_and_units() -> None:
     text = "We dosed 10 mL and recorded a 95% response within 20 ms of onset."
     p = protect(text)
-    assert "10 mL" not in p.masked
-    assert "95%" not in p.masked
-    assert "20 ms" not in p.masked
+    # The whole quantity, unit included, is one masked span.
+    assert "10 mL" in p.mapping.values()
+    assert "95%" in p.mapping.values()
+    assert "20 ms" in p.mapping.values()
+    # No unit fragment is left loose in the prose.
+    assert "%" not in p.masked
+    assert _round_trip(text) == text
+
+
+def test_percent_unit_is_masked_with_its_number() -> None:
+    """Regression: quantity_unit ended in \\b, which never matches after '%'
+    (both sides non-word), so "12.4%" masked only "12.4" and left a loose '%'
+    the model could later move or drop."""
+    text = "accuracy rose by 12.4% overall"
+    p = protect(text)
+    assert "12.4%" in p.mapping.values()
+    assert "%" not in p.masked
     assert _round_trip(text) == text
 
 
