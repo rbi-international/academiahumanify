@@ -139,7 +139,7 @@ Done when:
 - returns a structured report, never raises on soft failures
 - 10 or more tests including a deliberately drifting rewrite
 
-### [ ] M9. Changelog stage
+### [x] M9. Changelog stage
 `app/pipeline/changelog.py`
 
 Done when:
