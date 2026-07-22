@@ -55,7 +55,7 @@ Done when:
 - same extractor runs on the draft, producing the **Style Report**
 - 10 or more tests, including a short-sample and an empty-sample case
 
-### [ ] M4. Claim extractor
+### [x] M4. Claim extractor
 `app/pipeline/claims.py`
 
 Pull the assertions out of a paragraph so drift can be measured later.

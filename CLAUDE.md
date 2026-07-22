@@ -170,8 +170,9 @@ Completed:
 - **M1 Protection core** (`app/core/protection.py`), 13 tests
 - **M2 Segmenter** (`app/pipeline/segment.py`), 9 tests
 - **M3 Stylometry extractor** (`app/pipeline/stylometry.py`), 14 tests
+- **M4 Claim extractor** (`app/pipeline/claims.py`), 12 tests
 - Contracts (`app/pipeline/base.py`)
 
-**36 tests passing. Next: M4 Claim extractor.**
+**48 tests passing. Next: M5 LLM provider interface.**
 
 Keep this section updated as milestones land.
