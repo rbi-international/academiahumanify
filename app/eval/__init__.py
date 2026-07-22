@@ -15,5 +15,14 @@ from app.eval.evaluate import (
     VoiceMatch,
     evaluate,
 )
+from app.eval.judge import JudgeVerdict, judge_rewrites
 
-__all__ = ["Evaluation", "Fidelity", "Quality", "VoiceMatch", "evaluate"]
+__all__ = [
+    "Evaluation",
+    "Fidelity",
+    "JudgeVerdict",
+    "Quality",
+    "VoiceMatch",
+    "evaluate",
+    "judge_rewrites",
+]

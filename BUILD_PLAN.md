@@ -120,8 +120,14 @@ Done when:
 - comparison service runs models concurrently with failure isolation, every
   candidate records model id, prompt checksums, and tokens, and serialises to a
   dict for storage and reproducibility
-- a CLI (`scripts/compare.py`) runs it against real or local models today
-- 22 tests, all offline against the stub
+- optional LLM-as-judge (`app/eval/judge.py`): a premium model ranks the drafts
+  on faithfulness and readability, a second opinion beside the deterministic
+  ranking, never a detector
+- Ollama output is clean: thinking is turned off and any stray <think> block is
+  stripped, so local models read like a hosted chat model
+- a CLI (`scripts/compare.py`, with `--judge`) runs it against real or local
+  models today
+- 28 tests, all offline against the stub
 
 ### [ ] M8. Verify stage
 `app/pipeline/verify.py`

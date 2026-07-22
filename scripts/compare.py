@@ -21,7 +21,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
+from app.eval import judge_rewrites  # noqa: E402
 from app.llm.catalog import default_catalog  # noqa: E402
+from app.llm.factory import get_provider  # noqa: E402
 from app.pipeline.base import Intensity, RunContext  # noqa: E402
 from app.services import compare  # noqa: E402
 
@@ -51,6 +53,7 @@ def main() -> None:
     parser.add_argument("--intensity", default="balanced",
                         choices=[i.value for i in Intensity])
     parser.add_argument("--voice", type=Path, help="a file with a sample of your own writing")
+    parser.add_argument("--judge", help="model id to use as a quality judge (a second opinion)")
     args = parser.parse_args()
 
     catalog = default_catalog()
@@ -104,6 +107,26 @@ def main() -> None:
         print(comparison.original_text)
         print("\nAFTER:\n")
         print(best.rewritten_text)
+
+    # Optional: a premium model gives a second opinion on the eligible drafts.
+    # It judges faithfulness and readability, not detectability.
+    eligible = [c for c in comparison.candidates if c.eligible and c.rewritten_text]
+    if args.judge and len(eligible) >= 2:
+        spec = catalog.get(args.judge)
+        if not spec.available():
+            print(f"\nJudge {spec.display_name} unavailable: set {spec.api_key_env}.")
+        else:
+            rewrites = {c.model_id: c.rewritten_text for c in eligible if c.rewritten_text}
+            verdict = judge_rewrites(
+                comparison.original_text, rewrites, get_provider(spec.to_provider_config())
+            )
+            print(f"\n{RULE}\n JUDGE ({spec.display_name})\n{RULE}")
+            if not verdict.ok:
+                print("The judge did not return a usable verdict.")
+            else:
+                print(f"pick: {verdict.best_label}")
+                for label in verdict.ranking:
+                    print(f"  {label}: {verdict.rationale.get(label, '')}")
 
     print(f"\n{RULE}")
     print(" Ran locally. Hosted models run only when their API key is set.")

@@ -146,7 +146,21 @@ def test_ollama_shapes_request_and_parses() -> None:
     assert captured["payload"]["model"] == "qwen3"
     assert captured["payload"]["system"] == "s"
     assert captured["payload"]["stream"] is False
+    assert captured["payload"]["think"] is False  # thinking off by default
     assert provider.usage.total_tokens == 9
+
+
+def test_ollama_strips_thinking_from_output() -> None:
+    def fake_transport(url: str, payload: dict, headers: dict, timeout: float) -> dict:
+        return {
+            "response": "<think>Let me plan the rewrite.</think>\n\nThe clean prose.",
+            "prompt_eval_count": 5,
+            "eval_count": 4,
+        }
+
+    provider = OllamaProvider("qwen3", transport=fake_transport)
+    # Only the final prose survives; the chain of thought is gone.
+    assert provider.complete("rewrite this") == "The clean prose."
 
 
 def test_factory_selects_stub_and_satisfies_protocol() -> None:
