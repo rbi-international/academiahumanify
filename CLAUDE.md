@@ -172,8 +172,9 @@ Completed:
 - **M3 Stylometry extractor** (`app/pipeline/stylometry.py`), 14 tests
 - **M4 Claim extractor** (`app/pipeline/claims.py`), 12 tests
 - **M5 LLM provider interface** (`app/llm/`), 13 tests
+- **M6 Prompt library** (`prompts/`, `app/prompts/`), 13 tests
 - Contracts (`app/pipeline/base.py`)
 
-**61 tests passing. Next: M6 Prompt library.**
+**74 tests passing. Next: M7 Rewrite stage.**
 
 Keep this section updated as milestones land.

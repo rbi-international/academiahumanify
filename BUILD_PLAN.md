@@ -83,7 +83,7 @@ Done when:
 - **provider selected by config, never imported directly above `app/llm/`**
 - 8 or more tests, all against the stub
 
-### [ ] M6. Prompt library
+### [x] M6. Prompt library
 `prompts/system/`, `prompts/fewshot/`
 
 Done when:
