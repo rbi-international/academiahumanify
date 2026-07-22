@@ -129,7 +129,7 @@ Done when:
   models today
 - 28 tests, all offline against the stub
 
-### [ ] M8. Verify stage
+### [x] M8. Verify stage
 `app/pipeline/verify.py`
 
 Done when:

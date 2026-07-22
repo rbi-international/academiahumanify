@@ -187,8 +187,9 @@ Completed:
 - **M7.5 Model comparison and evaluation** (`app/llm/catalog.py`, `models.toml`,
   `app/eval/`, `app/services/comparison.py`, `scripts/compare.py`), 28 tests
   (includes the LLM-as-judge and clean Ollama output)
+- **M8 Verify stage** (`app/pipeline/verify.py`), 12 tests
 - Contracts (`app/pipeline/base.py`)
 
-**114 tests passing. Next: M8 Verify stage.**
+**126 tests passing. Next: M9 Changelog stage.**
 
 Keep this section updated as milestones land.
