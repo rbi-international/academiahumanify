@@ -92,3 +92,88 @@ api_key_env = "OPENAI_API_KEY"
 tier = "hosted"
 enabled = false
 notes = "High naturalness ceiling. Per-token cost."
+
+# --- OpenAI open-weight models (gpt-oss), Apache 2.0, via a fast host ---
+
+[[model]]
+id = "gpt-oss-120b-groq"
+display_name = "GPT-OSS 120B (Groq)"
+provider = "openai_compat"
+model = "openai/gpt-oss-120b"
+base_url = "https://api.groq.com/openai/v1"
+api_key_env = "GROQ_API_KEY"
+tier = "hosted"
+enabled = false
+notes = "OpenAI's open model, served fast by Groq. Also on Together and Ollama."
+
+[[model]]
+id = "gpt-oss-20b-ollama"
+display_name = "GPT-OSS 20B (local Ollama)"
+provider = "ollama"
+model = "gpt-oss:20b"
+host = "http://localhost:11434"
+tier = "local"
+enabled = true
+notes = "OpenAI's small open model, run locally. Needs `ollama pull gpt-oss:20b`."
+
+# --- Gemini via Google's OpenAI-compatible endpoint ---
+
+[[model]]
+id = "gemini-2.5-pro"
+display_name = "Gemini 2.5 Pro (Google)"
+provider = "openai_compat"
+model = "gemini-2.5-pro"
+base_url = "https://generativelanguage.googleapis.com/v1beta/openai/"
+api_key_env = "GEMINI_API_KEY"
+tier = "hosted"
+enabled = false
+notes = "Google's OpenAI-compatible layer. Verify the current model id."
+
+# --- Hugging Face open models via the HF OpenAI-compatible router ---
+
+[[model]]
+id = "hf-llama-3.3-70b"
+display_name = "Llama 3.3 70B (Hugging Face)"
+provider = "openai_compat"
+model = "meta-llama/Llama-3.3-70B-Instruct"
+base_url = "https://router.huggingface.co/v1"
+api_key_env = "HF_TOKEN"
+tier = "hosted"
+enabled = false
+notes = "Any HF-hosted chat model. Swap the model id for others on HF."
+
+# --- OpenRouter: one key reaches almost everything (OpenAI-compatible) ---
+# Verify current model ids at openrouter.ai/models; they change over time.
+
+[[model]]
+id = "openrouter-claude"
+display_name = "Claude (via OpenRouter)"
+provider = "openai_compat"
+model = "anthropic/claude-sonnet-4"
+base_url = "https://openrouter.ai/api/v1"
+api_key_env = "OPENROUTER_API_KEY"
+tier = "hosted"
+enabled = false
+notes = "Reaches Claude without a dedicated Anthropic provider."
+
+[[model]]
+id = "openrouter-gemini"
+display_name = "Gemini (via OpenRouter)"
+provider = "openai_compat"
+model = "google/gemini-2.5-pro"
+base_url = "https://openrouter.ai/api/v1"
+api_key_env = "OPENROUTER_API_KEY"
+tier = "hosted"
+enabled = false
+notes = "Same key as the other OpenRouter entries."
+
+[[model]]
+id = "openrouter-gpt-oss-120b"
+display_name = "GPT-OSS 120B (via OpenRouter)"
+provider = "openai_compat"
+model = "openai/gpt-oss-120b"
+base_url = "https://openrouter.ai/api/v1"
+api_key_env = "OPENROUTER_API_KEY"
+tier = "hosted"
+enabled = false
+notes = "Open-weight model through OpenRouter."

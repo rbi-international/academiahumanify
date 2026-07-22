@@ -1,0 +1,18 @@
+# Conda environment for AcademiaHumanify.
+#
+#   conda env create -f environment.yml
+#   conda activate academiahumanify
+#   pip install -e ".[dev]"      # if the pip section below is skipped
+#
+# Python 3.11 or newer is required (the project uses tomllib and modern typing).
+# Runtime code currently has zero third-party dependencies; the dev tools and,
+# from Phase 3, the web stack are installed via the package extras.
+
+name: academiahumanify
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - pip
+  - pip:
+      - -e ".[dev]"
