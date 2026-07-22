@@ -94,7 +94,7 @@ Done when:
 - few-shot before/after pairs for CS, biology, physics, social science
 - a prompt registry with checksums so a changed prompt is visible in the log
 
-### [ ] M7. Rewrite stage
+### [x] M7. Rewrite stage
 `app/pipeline/rewrite.py`
 
 Done when:

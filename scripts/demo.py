@@ -27,10 +27,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
-from app.core.protection import protect, restore_verified, verify  # noqa: E402
+from app.core.protection import protect, restore_verified  # noqa: E402
 from app.llm import ProviderConfig, get_provider  # noqa: E402
-from app.pipeline.base import Document, Intensity, RunContext  # noqa: E402
+from app.pipeline.base import Document, Intensity, RunContext, Segment  # noqa: E402
 from app.pipeline.claims import extract_claims  # noqa: E402
+from app.pipeline.rewrite import RewriteStage  # noqa: E402
 from app.pipeline.segment import Segmenter  # noqa: E402
 from app.pipeline.stylometry import extract  # noqa: E402
 from app.prompts import (  # noqa: E402
@@ -109,10 +110,12 @@ def main() -> None:
           f"(first 220 shown):\n")
     print(rendered.text[:220] + " ...")
 
-    # 6. The safety loop end to end, through the stub provider.
-    banner("6. REWRITE LOOP  (mask -> stub 'rewrite' -> verify -> restore)")
-    # Stand-in edits a model would make: drop the machine tells, keep every
-    # placeholder and the hedge. These edits never touch a ⟦P...⟧ token.
+    # 6. The real M7 rewrite stage: mask -> model -> verify -> restore.
+    banner("6. REWRITE STAGE  (the real M7 stage, driven by the stub provider)")
+    # The stub stands in for the model. These are the edits a model would make,
+    # written against the masked text so every ⟦P...⟧ token and the hedge survive.
+    # A real model (or a local Ollama Qwen3) plugs into the exact same stage and
+    # generates this itself instead of us scripting it.
     masked_rewrite = (
         protected.masked
         .replace(
@@ -126,20 +129,19 @@ def main() -> None:
             "These results may suggest a benefit for downstream tasks",
         )
     )
-    provider = get_provider(ProviderConfig(kind="stub", extra={"scripted": [masked_rewrite]}))
-    model_output = provider.complete(protected.masked, system=rendered.text)
-
-    result = verify(model_output, protected)
-    print(f"integrity check passed: {result.ok}  "
-          f"(missing={list(result.missing)} dup={list(result.duplicated)} "
-          f"invented={list(result.unexpected)})")
-    final = restore_verified(model_output, protected)
-    print(f"token usage this run: {provider.usage}")
+    stub = get_provider(ProviderConfig(kind="stub", extra={"scripted": [masked_rewrite]}))
+    prose = Segment(index=0, text=SAMPLE, frozen=False, kind="paragraph")
+    rewrite_doc = Document(text=SAMPLE, segments=(prose,))
+    result_doc = RewriteStage(stub, max_workers=1).run(
+        rewrite_doc, RunContext(intensity=Intensity.BALANCED)
+    )
+    rewritten = result_doc.segments[0].text
+    print("stage report:", result_doc.reports[-1].notes)
 
     print("\nBEFORE:\n")
     print(SAMPLE)
     print("\nAFTER (machine tells removed, every fact and hedge intact):\n")
-    print(final)
+    print(rewritten)
 
     print(f"\n{RULE}")
     print(" Everything above ran offline and deterministically. No API tokens spent.")
