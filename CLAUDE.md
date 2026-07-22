@@ -189,8 +189,9 @@ Completed:
   (includes the LLM-as-judge and clean Ollama output)
 - **M8 Verify stage** (`app/pipeline/verify.py`), 12 tests
 - **M9 Changelog stage** (`app/pipeline/changelog.py`), 12 tests
+- **M10 Orchestrator** (`app/services/orchestrator.py`), 7 tests
 - Contracts (`app/pipeline/base.py`)
 
-**138 tests passing. Next: M10 Orchestrator.**
+**145 tests passing. Phase 2 complete. Next: M11 FastAPI backend.**
 
 Keep this section updated as milestones land.

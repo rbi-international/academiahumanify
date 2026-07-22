@@ -148,7 +148,7 @@ Done when:
   connective replaced, redundancy removed
 - output feeds both the diff view and the export
 
-### [ ] M10. Orchestrator
+### [x] M10. Orchestrator
 `app/services/orchestrator.py`
 
 Done when:

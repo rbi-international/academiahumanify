@@ -68,6 +68,7 @@ class _Outcome:
     frozen: bool
     attempts: int
     refs: tuple[PromptRef, ...]
+    failed: bool = False  # integrity failed after retries; original text kept
 
 
 class RewriteStage:
@@ -89,6 +90,7 @@ class RewriteStage:
         max_attempts: int = DEFAULT_MAX_ATTEMPTS,
         max_workers: int = DEFAULT_MAX_WORKERS,
         registry: PromptRegistry | None = None,
+        isolate_failures: bool = False,
     ) -> None:
         self.provider = provider
         self.style = style
@@ -96,6 +98,11 @@ class RewriteStage:
         self.max_attempts = max_attempts
         self.max_workers = max_workers
         self.registry = registry
+        # When True, a segment that cannot pass its integrity check keeps its
+        # original text and is flagged, rather than raising. This is fidelity
+        # preserving: the bad rewrite is rejected, never accepted. The
+        # orchestrator turns this on so one bad segment does not kill a run.
+        self.isolate_failures = isolate_failures
 
     def run(self, doc: Document, ctx: RunContext) -> Document:
         voice = extract(ctx.voice_sample) if ctx.voice_sample else None
@@ -113,18 +120,20 @@ class RewriteStage:
         new_segments = tuple(seg for seg, _ in pairs)
         outcomes = [outcome for _, outcome in pairs]
 
-        rewritten = sum(1 for o in outcomes if not o.frozen)
+        rewritten = sum(1 for o in outcomes if not o.frozen and not o.failed)
         frozen = sum(1 for o in outcomes if o.frozen)
+        failed = sum(1 for o in outcomes if o.failed)
         retries = sum(o.attempts - 1 for o in outcomes if not o.frozen)
         refs = _unique_refs(outcomes)
 
         report = StageReport(
             stage=self.name,
-            ok=True,
+            ok=failed == 0,
             notes={
                 "segments": len(outcomes),
                 "rewritten": rewritten,
                 "frozen": frozen,
+                "failed": failed,
                 "retries": retries,
                 "voice": voice.confidence.value if voice else "none",
                 "prompt_refs": [f"{r.id}@v{r.version}:{r.checksum[:8]}" for r in refs],
@@ -144,7 +153,15 @@ class RewriteStage:
         intensity = resolve_intensity(segment.section, ctx.intensity)
         system, refs = self._system_prompt(intensity, voice)
 
-        masked_output, attempts = self._generate(protected, system, segment.index)
+        try:
+            masked_output, attempts = self._generate(protected, system, segment.index)
+        except RewriteError:
+            if not self.isolate_failures:
+                raise
+            logger.warning("segment %d kept its original after integrity failure", segment.index)
+            return segment, _Outcome(
+                segment.index, frozen=False, attempts=self.max_attempts, refs=refs, failed=True
+            )
         # Verified inside _generate, so restore is safe here.
         new_text = restore(masked_output, protected.mapping)
         return segment.with_text(new_text), _Outcome(
