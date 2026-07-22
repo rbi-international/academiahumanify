@@ -21,6 +21,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
+from app.config import load_env  # noqa: E402
 from app.eval import judge_rewrites  # noqa: E402
 from app.llm.catalog import default_catalog  # noqa: E402
 from app.llm.factory import get_provider  # noqa: E402
@@ -56,6 +57,7 @@ def main() -> None:
     parser.add_argument("--judge", help="model id to use as a quality judge (a second opinion)")
     args = parser.parse_args()
 
+    load_env()  # pull any keys from a local .env into the environment
     catalog = default_catalog()
     text = args.file.read_text(encoding="utf-8") if args.file else SAMPLE
     voice = args.voice.read_text(encoding="utf-8") if args.voice else None

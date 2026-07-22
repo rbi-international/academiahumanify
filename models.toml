@@ -103,7 +103,7 @@ model = "openai/gpt-oss-120b"
 base_url = "https://api.groq.com/openai/v1"
 api_key_env = "GROQ_API_KEY"
 tier = "hosted"
-enabled = false
+enabled = true
 notes = "OpenAI's open model, served fast by Groq. Also on Together and Ollama."
 
 [[model]]
@@ -153,7 +153,7 @@ model = "anthropic/claude-sonnet-4"
 base_url = "https://openrouter.ai/api/v1"
 api_key_env = "OPENROUTER_API_KEY"
 tier = "hosted"
-enabled = false
+enabled = true
 notes = "Reaches Claude without a dedicated Anthropic provider."
 
 [[model]]
@@ -164,7 +164,7 @@ model = "google/gemini-2.5-pro"
 base_url = "https://openrouter.ai/api/v1"
 api_key_env = "OPENROUTER_API_KEY"
 tier = "hosted"
-enabled = false
+enabled = true
 notes = "Same key as the other OpenRouter entries."
 
 [[model]]
@@ -175,5 +175,5 @@ model = "openai/gpt-oss-120b"
 base_url = "https://openrouter.ai/api/v1"
 api_key_env = "OPENROUTER_API_KEY"
 tier = "hosted"
-enabled = false
+enabled = true
 notes = "Open-weight model through OpenRouter."
