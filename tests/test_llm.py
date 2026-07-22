@@ -163,6 +163,39 @@ def test_ollama_strips_thinking_from_output() -> None:
     assert provider.complete("rewrite this") == "The clean prose."
 
 
+def test_urllib_transport_sends_a_user_agent(monkeypatch: Any) -> None:
+    # Regression: the default urllib User-Agent gets a 403 from Cloudflare-fronted
+    # providers (Groq returned error 1010). A real User-Agent must be sent.
+    import urllib.request
+
+    from app.llm.base import urllib_transport
+
+    captured: dict[str, Any] = {}
+
+    class _Resp:
+        status = 200
+
+        def read(self) -> bytes:
+            return b'{"ok": true}'
+
+        def __enter__(self) -> _Resp:
+            return self
+
+        def __exit__(self, *args: Any) -> bool:
+            return False
+
+    def fake_urlopen(req: Any, timeout: float | None = None) -> _Resp:
+        captured["ua"] = req.get_header("User-agent")
+        captured["ctype"] = req.get_header("Content-type")
+        return _Resp()
+
+    monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
+    out = urllib_transport("https://example.com/v1/models", {"a": 1}, {}, 10.0)
+    assert out == {"ok": True}
+    assert captured["ua"]  # a non-default User-Agent was set
+    assert "json" in captured["ctype"]
+
+
 def test_factory_selects_stub_and_satisfies_protocol() -> None:
     provider = get_provider(ProviderConfig(kind="stub", extra={"default_response": "ok"}))
     assert isinstance(provider, LLMProvider)  # runtime_checkable protocol

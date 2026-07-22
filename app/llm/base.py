@@ -119,6 +119,11 @@ def call_with_retry(
     raise last
 
 
+# Some providers sit behind Cloudflare, which blocks the default urllib
+# User-Agent with a 403 (Cloudflare error 1010). Sending a real User-Agent
+# avoids that, so every hosted provider is reachable.
+_USER_AGENT = "academiahumanify/0.1"
+
 # A transport is the one impure step: send a JSON payload, get JSON back. Making
 # it injectable lets the network providers be tested with a fake, no sockets.
 Transport = Callable[[str, dict[str, Any], dict[str, str], float], dict[str, Any]]
@@ -137,7 +142,7 @@ def urllib_transport(
     request = urllib.request.Request(
         url,
         data=data,
-        headers={"Content-Type": "application/json", **headers},
+        headers={"Content-Type": "application/json", "User-Agent": _USER_AGENT, **headers},
         method="POST",
     )
     try:
