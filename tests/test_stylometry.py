@@ -116,6 +116,29 @@ def test_tell_counters() -> None:
     assert tells.uniform_openings == 2
 
 
+def test_ai_diction_and_hollow_phrases_are_counted() -> None:
+    text = (
+        "It is important to note that we delve into a robust and comprehensive "
+        "framework. This leverages a seamless pipeline. Moreover, it is worth "
+        "noting that the results are nuanced."
+    )
+    tells = extract(text).features.tells
+    # delve, robust, comprehensive, leverages? ("leverages" not in list, "leverage"
+    # is) -> delve, robust, comprehensive, seamless, moreover, nuanced = 6.
+    assert tells.ai_diction >= 5
+    # "it is important to note" + "it is worth noting" = 2 hollow phrases.
+    assert tells.hollow_phrases == 2
+    report = extract(text).style_report()
+    assert report["ai_diction"] == tells.ai_diction
+    assert report["hollow_phrases"] == 2
+
+
+def test_clean_prose_has_no_ai_diction_tells() -> None:
+    tells = extract("We measured the decay rate. The value agrees with theory.").features.tells
+    assert tells.ai_diction == 0
+    assert tells.hollow_phrases == 0
+
+
 def test_full_sample_populates_features_with_ok_confidence() -> None:
     profile = extract(LONG_SAMPLE)
     assert profile.word_count >= 80

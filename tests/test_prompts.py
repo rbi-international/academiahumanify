@@ -145,8 +145,13 @@ def test_compose_without_discipline_omits_example() -> None:
 
 
 def test_no_prompt_uses_em_dashes_or_banned_words() -> None:
+    # The rewrite prompt legitimately names the banned words in order to forbid
+    # them to the model, so it is exempt from the diction check (but not from
+    # the em-dash check).
     for prompt in default_registry().all():
         assert "—" not in prompt.text, f"em dash in {prompt.id}"
+        if prompt.id == "system/rewrite":
+            continue
         lowered = prompt.text.lower()
         for word in _BANNED_WORDS:
             assert word not in lowered, f"{word!r} in {prompt.id}"

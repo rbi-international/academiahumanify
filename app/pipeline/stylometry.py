@@ -67,6 +67,25 @@ _MOREOVER_FAMILY: tuple[str, ...] = (
     "moreover", "furthermore", "additionally", "in addition", "besides",
 )
 
+# Inflated vocabulary that language models reach for far more than human authors.
+# Counting it in the draft tells the writer which words to swap for plain ones.
+# This is an editing signal, a count of tells, not a detector score.
+_AI_DICTION: tuple[str, ...] = (
+    "delve", "leverage", "seamless", "seamlessly", "robust", "intricate",
+    "pivotal", "crucial", "comprehensive", "realm", "tapestry", "underscore",
+    "underscores", "showcase", "showcases", "testament", "landscape",
+    "navigate", "foster", "myriad", "nuanced", "meticulous", "meticulously",
+    "notably", "furthermore", "moreover",
+)
+
+# Hollow throat-clearing phrases that add words without adding content.
+_HOLLOW_PHRASES: tuple[str, ...] = (
+    "it is important to note", "it is worth noting", "it is worth mentioning",
+    "plays a vital role", "plays a key role", "plays a crucial role",
+    "a wide range of", "rich tapestry", "in today's world",
+    "stands as a testament", "it should be noted",
+)
+
 _BE_FORMS = r"(?:am|is|are|was|were|be|been|being)"
 _IRREGULAR_PARTICIPLES = (
     "done", "made", "shown", "seen", "found", "given", "taken", "held", "known",
@@ -144,6 +163,8 @@ class Tells:
     uniform_openings: int = 0
     top_opening_word: str | None = None
     top_opening_count: int = 0
+    ai_diction: int = 0  # inflated words models overuse (delve, leverage, ...)
+    hollow_phrases: int = 0  # throat-clearing that adds words, not content
 
 
 @dataclass(frozen=True)
@@ -199,6 +220,8 @@ class VoiceProfile:
             "moreover_family": t.moreover_family,
             "em_dashes": t.em_dashes,
             "uniform_openings": t.uniform_openings,
+            "ai_diction": t.ai_diction,
+            "hollow_phrases": t.hollow_phrases,
             "repeated_opening": (
                 None if t.top_opening_word is None
                 else {"word": t.top_opening_word, "count": t.top_opening_count}
@@ -215,6 +238,8 @@ def _extract_tells(text: str, sentences: list[str]) -> Tells:
     tricolons = len(_TRICOLON_RE.findall(text))
     moreover = sum(_count_phrase(text_lower, p) for p in _MOREOVER_FAMILY)
     em_dashes = len(_EM_DASH_RE.findall(text))
+    ai_diction = sum(_count_phrase(text_lower, w) for w in _AI_DICTION)
+    hollow_phrases = sum(text_lower.count(p) for p in _HOLLOW_PHRASES)
 
     openings: dict[str, int] = {}
     for sentence in sentences:
@@ -238,6 +263,8 @@ def _extract_tells(text: str, sentences: list[str]) -> Tells:
         uniform_openings=uniform_openings,
         top_opening_word=top_word,
         top_opening_count=top_count,
+        ai_diction=ai_diction,
+        hollow_phrases=hollow_phrases,
     )
 
 

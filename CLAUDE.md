@@ -105,9 +105,19 @@ measured stylometric targets.
 These apply to code comments, docs, commit messages, UI copy, and prompts.
 
 - **No em dashes. Anywhere. Ever.** Use commas, colons, or parentheses.
-- No AI-generated feel. No "delve", "leverage", "seamless", "robust solution".
+- No AI-generated feel. Avoid the inflated words models overuse: "delve",
+  "leverage", "seamless", "robust", "intricate", "pivotal", "crucial",
+  "comprehensive", "realm", "tapestry", "underscore", "showcase", "testament",
+  "landscape", "navigate", "foster", "myriad", "nuanced", "meticulous". Use the
+  plain word.
+- Vary cadence. Uniform sentence length and repeated sentence openings read as
+  machine writing. Mix short sentences with long ones.
 - No filler openers like "Certainly" or "Great question".
 - Explain layman first, then correlate with the technical detail.
+
+Note: this is a prose-quality standard, not detector evasion. It stays inside
+section 2. The product edits for how humans read, it does not model or optimise
+against any AI detector.
 
 ## 9. Working agreement (how to build this)
 
