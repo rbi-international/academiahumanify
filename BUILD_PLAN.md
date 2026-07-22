@@ -70,7 +70,7 @@ Done when:
 
 ## Phase 2: Model layer
 
-### [ ] M5. LLM provider interface
+### [x] M5. LLM provider interface
 `app/llm/base.py`, `app/llm/stub.py`, `app/llm/ollama.py`, `app/llm/openai_compat.py`
 
 Done when:
