@@ -104,6 +104,25 @@ Done when:
 - concurrency with a semaphore, ordered reassembly
 - tested end to end against StubProvider
 
+### [x] M7.5. Model comparison and evaluation
+`app/llm/catalog.py`, `models.toml`, `app/eval/`, `app/services/comparison.py`,
+`scripts/compare.py`
+
+Run one draft through several models, score each rewrite, rank them, let the user
+pick. Built as a first-class, durable subsystem.
+
+Done when:
+- model catalog is config (`models.toml`, tomllib), not code: a new model is a
+  config edit, keys read from the environment, frontend reads the catalog
+- deterministic evaluation harness: fidelity (placeholders, claim strength,
+  sentence delta), prose quality (Style Report tells), voice match, change ratio
+- ranking rule: fidelity is a hard gate, quality ranks the survivors
+- comparison service runs models concurrently with failure isolation, every
+  candidate records model id, prompt checksums, and tokens, and serialises to a
+  dict for storage and reproducibility
+- a CLI (`scripts/compare.py`) runs it against real or local models today
+- 22 tests, all offline against the stub
+
 ### [ ] M8. Verify stage
 `app/pipeline/verify.py`
 

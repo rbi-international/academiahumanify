@@ -1,0 +1,94 @@
+# Model catalog. This file, not code, is the list of models the product can use.
+# Add a model by adding a [[model]] block. Change a model by editing one. Nothing
+# in here is a secret: API keys are read at runtime from the environment variable
+# named in api_key_env, never stored here.
+#
+# Fields:
+#   id            stable slug used everywhere (do not rename once shipped)
+#   display_name  what the frontend shows
+#   provider      stub | ollama | openai_compat | together | fireworks | deepinfra | groq
+#   model         the provider's own model string
+#   base_url      hosted endpoint (OpenAI-compatible providers)
+#   api_key_env   environment variable holding the key (hosted only)
+#   host          Ollama host (local only)
+#   tier          local | hosted
+#   enabled       whether it appears in the picker
+#   notes         free text
+#
+# Note on Anthropic Claude and Google Gemini: their APIs are not OpenAI-compatible,
+# so they need a dedicated provider kind (a future catalog + provider addition).
+# The catalog is built to absorb new provider kinds without touching callers.
+
+[[model]]
+id = "stub-echo"
+display_name = "Stub (echo, offline)"
+provider = "stub"
+model = ""
+tier = "local"
+enabled = true
+notes = "Deterministic echo. Baseline for offline runs and tests. Changes nothing."
+
+[[model]]
+id = "qwen3-8b-ollama"
+display_name = "Qwen3 8B (local Ollama)"
+provider = "ollama"
+model = "qwen3:8b"
+host = "http://localhost:11434"
+tier = "local"
+enabled = true
+notes = "Local dev. Disable thinking or strip <think> tags before judging output."
+
+[[model]]
+id = "qwen3-235b-together"
+display_name = "Qwen3 235B A22B (Together)"
+provider = "together"
+model = "Qwen/Qwen3-235B-A22B-fp8-tput"
+base_url = "https://api.together.xyz/v1"
+api_key_env = "TOGETHER_API_KEY"
+tier = "hosted"
+enabled = false
+notes = "Large Qwen3. Enable when TOGETHER_API_KEY is set."
+
+[[model]]
+id = "deepseek-v3-together"
+display_name = "DeepSeek V3 (Together)"
+provider = "together"
+model = "deepseek-ai/DeepSeek-V3"
+base_url = "https://api.together.xyz/v1"
+api_key_env = "TOGETHER_API_KEY"
+tier = "hosted"
+enabled = false
+notes = "Strong open-weights generalist."
+
+[[model]]
+id = "llama-3.3-70b-together"
+display_name = "Llama 3.3 70B (Together)"
+provider = "together"
+model = "meta-llama/Llama-3.3-70B-Instruct-Turbo"
+base_url = "https://api.together.xyz/v1"
+api_key_env = "TOGETHER_API_KEY"
+tier = "hosted"
+enabled = false
+notes = "Natural English prose. Check the Llama license against your scale."
+
+[[model]]
+id = "mistral-large-latest"
+display_name = "Mistral Large (Mistral)"
+provider = "openai_compat"
+model = "mistral-large-latest"
+base_url = "https://api.mistral.ai/v1"
+api_key_env = "MISTRAL_API_KEY"
+tier = "hosted"
+enabled = false
+notes = "Clean, direct prose. OpenAI-compatible endpoint."
+
+[[model]]
+id = "gpt-4o-openai"
+display_name = "GPT-4o (OpenAI)"
+provider = "openai_compat"
+model = "gpt-4o"
+base_url = "https://api.openai.com/v1"
+api_key_env = "OPENAI_API_KEY"
+tier = "hosted"
+enabled = false
+notes = "High naturalness ceiling. Per-token cost."

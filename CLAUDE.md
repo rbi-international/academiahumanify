@@ -184,8 +184,10 @@ Completed:
 - **M5 LLM provider interface** (`app/llm/`), 13 tests
 - **M6 Prompt library** (`prompts/`, `app/prompts/`), 13 tests
 - **M7 Rewrite stage** (`app/pipeline/rewrite.py`), 9 tests
+- **M7.5 Model comparison and evaluation** (`app/llm/catalog.py`, `models.toml`,
+  `app/eval/`, `app/services/comparison.py`, `scripts/compare.py`), 22 tests
 - Contracts (`app/pipeline/base.py`)
 
-**86 tests passing. Next: M8 Verify stage.**
+**108 tests passing. Next: M8 Verify stage.**
 
 Keep this section updated as milestones land.
