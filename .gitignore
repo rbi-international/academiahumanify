@@ -23,3 +23,13 @@ Thumbs.db
 
 # Env
 .env
+
+# Internal planning and context docs: kept local, not published to the repo.
+# Only README.md and HOW_TO_RUN.md are public.
+/ARCHITECTURE.md
+/BUILD_PLAN.md
+/CLAUDE.md
+/PROGRESS.md
+/SETUP.md
+/HANDOFF.md
+/FRONTEND.md
